@@ -1,0 +1,19 @@
+.todolist {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 200px;
+    margin: 0 auto;
+    border: 1px solid;
+    padding: 10px;
+}
+
+.input {
+    grid-column: 1;
+    width: max-content;
+}
+
+.title {
+    grid-column: 1;
+    justify-self: left;
+    margin-left: 20px;
+}
