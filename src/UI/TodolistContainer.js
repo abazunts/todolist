@@ -28,7 +28,8 @@ let mapDispatchToProps = (dispatch) => {
             dispatch(changeTaskTextAC(newText))
         },
         addTask: (title) => {
-            dispatch(addTasksT(title))
+            title ? dispatch(addTasksT(title)) : alert('Please input you task')
+
         },
         getTask:  () => {
             dispatch(getTasksT())
