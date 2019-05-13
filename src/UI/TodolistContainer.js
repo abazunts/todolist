@@ -2,11 +2,12 @@ import React from 'react'
 
 import {connect} from "react-redux";
 import Todolist from "./Todolist";
-import {changeTaskTextAC, addTasksT, getTasksT} from "../BLL/todolist-reducer";
+import {changeTaskText, addTask, getTasks, setFilter, toggleSortDirection} from "../BLL/todolist-reducer";
+import {getFilteredTasks, getSortDirection, getSortField} from "../BLL/selectors";
 
 let TodolistContainer = class extends React.Component {
     componentDidMount() {
-        this.props.getTask()
+        this.props.getTasks()
     }
 
     render() {
@@ -16,27 +17,16 @@ let TodolistContainer = class extends React.Component {
 
 let mapStateToProps = (state) => {
     return {
-        tasks: state.todolist.tasks,
+        tasks:  getFilteredTasks(state),
         newTaskText: state.todolist.newTaskText,
         status: state.todolist.status,
-    }
-}
-
-let mapDispatchToProps = (dispatch) => {
-    return {
-        changeTaskText: (newText) => {
-            dispatch(changeTaskTextAC(newText))
-        },
-        addTask: (title) => {
-            title ? dispatch(addTasksT(title)) : alert('Please input you task')
-
-        },
-        getTask:  () => {
-            dispatch(getTasksT())
-        }
+        sortDirection: getSortDirection(state),
+        sortField: getSortField(state)
     }
 }
 
 
-TodolistContainer = connect(mapStateToProps, mapDispatchToProps)(TodolistContainer);
+
+
+TodolistContainer = connect(mapStateToProps, { changeTaskText, addTask, getTasks, setFilter, toggleSortDirection })(TodolistContainer);
 export default TodolistContainer;

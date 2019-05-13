@@ -87,6 +87,10 @@
     width: 150px;
 }
 
+.tasks h3{
+    cursor: pointer;
+}
+
 
 
 

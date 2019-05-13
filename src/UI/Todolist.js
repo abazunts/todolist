@@ -2,11 +2,12 @@ import React from 'react'
 import {statuses} from "../BLL/todolist-reducer";
 import style from './todolist.module.css'
 import {NavLink} from "react-router-dom";
+import SearchBlock from "./SearchBlock";
 
 let todolist = (props) => {
 
     let {tasks = [], newTaskText, status} = props;
-    let {addTask, changeTaskText} = props;
+    let {addTask, changeTaskText, toggleSortDirection, sortDirection} = props;
 
     let changeText = (e) => {
         changeTaskText(e.target.value)
@@ -20,6 +21,10 @@ let todolist = (props) => {
        addTask(newTaskText)
     }
 
+    let onSortDirectionChanged = (e) => {
+        toggleSortDirection();
+    };
+
     return (
         <div className={style.todolist}>
             <input
@@ -27,7 +32,9 @@ let todolist = (props) => {
                 onKeyUp={onKeyUp} disabled={status === statuses.IN_PROGRESS}/>
             <button className={style.button} onClick={onClick}>Send</button>
             <div className={style.tasks}>
+                <SearchBlock setFilter={props.setFilter} />
                 <div>
+                    <h3 onClick={onSortDirectionChanged}> {sortDirection === 'asc' ? `\\/` : `/\\` } </h3>
                     {!tasks.length
                         ? <div className={style.title}>No tasks</div>
                         : tasks.map(t => <div className={style.title}><li>{t.title}</li></div>)}

@@ -4,6 +4,8 @@ const ADD_TASK = 'TODOLIST/ADD_TASK';
 const ADD_NEW_TASK_TEXT = 'TODOLIST/ADD_NEW_TASK_TEXT';
 const SET_TASKS = 'TODOLIST/SET_TASKS';
 const SET_STATUS = 'TODOLIST/SET_STATUS';
+const SET_FILTER = 'TODOLIST/SET_FILTER';
+const TOGGLE_SORT_DIRECTION = 'TODOLIST/TOGGLE_SORT_DIRECTION';
 
 export const statuses = {
     NOT_INITIALIZED: 'NOT_INIT',
@@ -15,7 +17,10 @@ export const statuses = {
 let initialState = {
     tasks: [],
     newTaskText: '',
+    filter: '',
     status: statuses.NOT_INITIALIZED,
+    sortDirection: 'asc',
+    sortField: 'title'
 }
 
 let TodolistReducer = (state = initialState, action) => {
@@ -38,6 +43,21 @@ let TodolistReducer = (state = initialState, action) => {
                 tasks: [...action.tasks]
             }
         }
+        case SET_FILTER: {
+            return {
+                ...state,
+                filter: action.filter
+            }
+        }
+
+        case TOGGLE_SORT_DIRECTION: {
+            return {
+                ...state,
+                sortDirection: action.value
+                    ? action.value
+                    : (state.sortDirection === 'asc' ? 'desc' : 'asc')
+            }
+        }
         case SET_STATUS: {
             return {
                 ...state,
@@ -50,26 +70,29 @@ let TodolistReducer = (state = initialState, action) => {
     }
 }
 
-export let addTaskAC = (newTask) => ({type: ADD_TASK, newTask});
-export let changeTaskTextAC = (newText) => ({type: ADD_NEW_TASK_TEXT, newText});
-export let setTasksAC = (tasks) => ({type: SET_TASKS, tasks});
-export let setStatusAC = (status) => ({type: SET_STATUS, status})
+export let setTask = (newTask) => ({type: ADD_TASK, newTask});
+export let changeTaskText = (newText) => ({type: ADD_NEW_TASK_TEXT, newText});
+export let setTasks = (tasks) => ({type: SET_TASKS, tasks});
+export let setStatus = (status) => ({type: SET_STATUS, status})
+export let setFilter = (filterValue) => ({type: SET_FILTER, filter: filterValue});
+export let toggleSortDirection = (value = null) => ({type: TOGGLE_SORT_DIRECTION, value});
 
-export let  getTasksT = () => (dispatch) => {
-    dispatch(setStatusAC(statuses.IN_PROGRESS))
+
+export let  getTasks = () => (dispatch) => {
+    dispatch(setStatus(statuses.IN_PROGRESS))
     apiService.getTask()
         .then(tasks => {
-            dispatch(setTasksAC(tasks))
-            dispatch(setStatusAC(statuses.SUCCESS))
+            dispatch(setTasks(tasks))
+            dispatch(setStatus(statuses.SUCCESS))
         })
 }
 
-export let addTasksT = (title) => (dispatch) => {
-    dispatch(setStatusAC(statuses.IN_PROGRESS))
+export let addTask = (title) => (dispatch) => {
+    dispatch(setStatus(statuses.IN_PROGRESS))
     apiService.setTask(title).then(task => {
-            dispatch(addTaskAC(task))
-            dispatch(setStatusAC(statuses.SUCCESS))
-            dispatch(changeTaskTextAC(''))
+            dispatch(setTask(task))
+            dispatch(setStatus(statuses.SUCCESS))
+            dispatch(changeTaskText(''))
         })
 }
 
